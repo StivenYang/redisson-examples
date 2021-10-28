@@ -31,15 +31,12 @@ public class FairLockExamples {
         RLock lock = redisson.getFairLock("test");
 
         int size = 10;
-        List<Thread> threads = new ArrayList<Thread>();
+        List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            final int j = i;
-            Thread t = new Thread() {
-                public void run() {
-                    lock.lock();
-                    lock.unlock();
-                };
-            };
+			Thread t = new Thread(() -> {
+				lock.lock();
+				lock.unlock();
+			});
             
             threads.add(t);
         }

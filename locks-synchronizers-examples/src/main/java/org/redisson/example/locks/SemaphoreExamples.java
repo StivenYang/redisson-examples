@@ -29,14 +29,11 @@ public class SemaphoreExamples {
         s.trySetPermits(5);
         s.acquire(3);
 
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                RSemaphore s = redisson.getSemaphore("test");
-                s.release();
-                s.release();
-            }
-        };
+        Thread t = new Thread(() -> {
+			RSemaphore s1 = redisson.getSemaphore("test");
+			s1.release();
+			s1.release();
+		});
 
         t.start();
 

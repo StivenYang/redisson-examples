@@ -30,13 +30,11 @@ public class LockExamples {
         RLock lock = redisson.getLock("lock");
         lock.lock(2, TimeUnit.SECONDS);
 
-        Thread t = new Thread() {
-            public void run() {
-                RLock lock1 = redisson.getLock("lock");
-                lock1.lock();
-                lock1.unlock();
-            };
-        };
+        Thread t = new Thread(() -> {
+			RLock lock1 = redisson.getLock("lock");
+			lock1.lock();
+			lock1.unlock();
+		});
 
         t.start();
         t.join();

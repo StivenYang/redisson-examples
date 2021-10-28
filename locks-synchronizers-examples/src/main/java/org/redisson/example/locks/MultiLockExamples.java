@@ -30,19 +30,17 @@ public class MultiLockExamples {
         RLock lock2 = client.getLock("lock2");
         RLock lock3 = client.getLock("lock3");
         
-        Thread t = new Thread() {
-            public void run() {
-                RedissonMultiLock lock = new RedissonMultiLock(lock1, lock2, lock3);
-                lock.lock();
-                
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                }
-                
-                lock.unlock();
-            };
-        };
+        Thread t = new Thread(() -> {
+			RedissonMultiLock lock = new RedissonMultiLock(lock1, lock2, lock3);
+			lock.lock();
+
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException ignored) {
+			}
+
+			lock.unlock();
+		});
         t.start();
         t.join(1000);
 

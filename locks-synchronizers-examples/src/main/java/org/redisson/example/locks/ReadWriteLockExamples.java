@@ -30,19 +30,17 @@ public class ReadWriteLockExamples {
 
         lock.writeLock().tryLock();
 
-        Thread t = new Thread() {
-            public void run() {
-                 RLock r = lock.readLock();
-                 r.lock();
+        Thread t = new Thread(() -> {
+			 RLock r = lock.readLock();
+			 r.lock();
 
-                 try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                r.unlock();
-            };
-        };
+			 try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			r.unlock();
+		});
 
         t.start();
         t.join();

@@ -32,26 +32,20 @@ public class RedLockExamples {
         RLock lock2 = client1.getLock("lock2");
         RLock lock3 = client2.getLock("lock3");
         
-        Thread t1 = new Thread() {
-            public void run() {
-                lock3.lock();
-            };
-        };
+        Thread t1 = new Thread(lock3::lock);
         t1.start();
         t1.join();
         
-        Thread t = new Thread() {
-            public void run() {
-                RedissonMultiLock lock = new RedissonRedLock(lock1, lock2, lock3);
-                lock.lock();
-                
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                }
-                lock.unlock();
-            };
-        };
+        Thread t = new Thread(() -> {
+			RedissonMultiLock lock = new RedissonRedLock(lock1, lock2, lock3);
+			lock.lock();
+
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException ignored) {
+			}
+			lock.unlock();
+		});
         t.start();
         t.join(1000);
 

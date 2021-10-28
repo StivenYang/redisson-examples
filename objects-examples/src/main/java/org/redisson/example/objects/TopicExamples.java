@@ -20,7 +20,6 @@ import java.util.concurrent.CountDownLatch;
 import org.redisson.Redisson;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
-import org.redisson.api.listener.MessageListener;
 
 public class TopicExamples {
 
@@ -31,12 +30,7 @@ public class TopicExamples {
         CountDownLatch latch = new CountDownLatch(1);
         
         RTopic topic = redisson.getTopic("topic2");
-        topic.addListener(String.class, new MessageListener<String>() {
-            @Override
-            public void onMessage(CharSequence channel, String msg) {
-                latch.countDown();
-            }
-        });
+        topic.addListener(String.class, (channel, msg) -> latch.countDown());
         
         topic.publish("msg");
         latch.await();

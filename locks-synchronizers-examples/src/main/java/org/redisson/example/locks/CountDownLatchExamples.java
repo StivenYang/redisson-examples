@@ -34,27 +34,15 @@ public class CountDownLatchExamples {
         final RCountDownLatch latch = redisson.getCountDownLatch("latch1");
         latch.trySetCount(1);
 
-        executor.execute(new Runnable() {
+        executor.execute(latch::countDown);
 
-            @Override
-            public void run() {
-                latch.countDown();
-            }
-            
-        });
-
-        executor.execute(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    latch.await(550, TimeUnit.MILLISECONDS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            
-        });
+        executor.execute(() -> {
+			try {
+				latch.await(550, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		});
 
         
         executor.shutdown();

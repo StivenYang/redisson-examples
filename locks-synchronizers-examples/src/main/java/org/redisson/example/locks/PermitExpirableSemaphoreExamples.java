@@ -31,17 +31,15 @@ public class PermitExpirableSemaphoreExamples {
         s.trySetPermits(1);
         String permitId = s.tryAcquire(100, 2, TimeUnit.SECONDS);
 
-        Thread t = new Thread() {
-            public void run() {
-                RPermitExpirableSemaphore s = redisson.getPermitExpirableSemaphore("test");
-                try {
-                    String permitId = s.acquire();
-                    s.release(permitId);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            };
-        };
+        Thread t = new Thread(() -> {
+			RPermitExpirableSemaphore s1 = redisson.getPermitExpirableSemaphore("test");
+			try {
+				String permitId1 = s1.acquire();
+				s1.release(permitId1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		});
 
         t.start();
         t.join();
